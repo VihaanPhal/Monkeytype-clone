@@ -1,100 +1,157 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState } from "react";
+import {
+  Moon,
+  Sun,
+  Settings,
+  User,
+  BarChart,
+  Info,
+  ArrowLeft,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import MonkeyTypeClone from "./homepage";
+
+export default function App() {
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [showTest, setShowTest] = useState(false);
+  const [testType, setTestType] = useState("time");
+  const [testDuration, setTestDuration] = useState("30");
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  const startTest = () => {
+    setShowTest(true);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div
+      className={`min-h-screen flex flex-col ${
+        theme === "light"
+          ? "bg-white text-zinc-900"
+          : "bg-zinc-900 text-zinc-100"
+      }`}
+    >
+      <header className="p-4 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          {showTest ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowTest(false)}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" size="icon">
+                <Info className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Settings className="h-5 w-5" />
+              </Button>
+            </>
+          )}
+        </div>
+        <h1 className="text-2xl font-bold">monkeytype</h1>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
+        {showTest ? (
+          <MonkeyTypeClone
+            initialTheme={theme}
+            initialTestDuration={parseInt(testDuration)}
+          />
+        ) : (
+          <div className="w-full max-w-3xl space-y-8">
+            <div className="flex justify-center space-x-4">
+              <Select value={testType} onValueChange={setTestType}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Test type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="time">time</SelectItem>
+                  <SelectItem value="words">words</SelectItem>
+                  <SelectItem value="quote">quote</SelectItem>
+                  <SelectItem value="zen">zen</SelectItem>
+                  <SelectItem value="custom">custom</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={testDuration} onValueChange={setTestDuration}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Test length" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15</SelectItem>
+                  <SelectItem value="30">30</SelectItem>
+                  <SelectItem value="60">60</SelectItem>
+                  <SelectItem value="120">120</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="text-center space-y-4">
+              <p className="text-6xl font-mono">monkey see</p>
+              <p className="text-3xl text-zinc-500 font-mono">monkey type</p>
+            </div>
+
+            <div className="text-center">
+              <p className="text-lg">
+                The most customizable typing test in the world
+              </p>
+            </div>
+
+            <div className="flex justify-center">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-lg"
+                onClick={startTest}
+              >
+                Start Test
+              </Button>
+            </div>
+          </div>
+        )}
+      </main>
+
+      <footer className="p-4 flex justify-between items-center text-sm">
+        <div className="flex space-x-4">
+          <a href="#" className="hover:underline">
+            about
           </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
+          <a href="#" className="hover:underline">
+            contact
+          </a>
+          <a href="#" className="hover:underline">
+            privacy
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        <div className="flex items-center space-x-4">
+          <BarChart className="h-5 w-5" />
+          <span>1,234,567 tests completed</span>
+        </div>
       </footer>
     </div>
   );
